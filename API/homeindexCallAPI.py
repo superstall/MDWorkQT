@@ -67,7 +67,11 @@ def Request_init_package(DOCUMENTPATH=None) -> list:
     return return_json
 
 def Request_search_fileID_package(fileID,return_json) -> dict:
-    return [package for package in return_json if package['fileID'] == fileID][0]
+    return_list = [package for package in return_json if package['fileID'] == fileID]
+    if return_list:
+        return return_list[0]
+    else:
+        return False
 
 def Request_search_package(search_string,return_json) -> list:
     # 查询功能

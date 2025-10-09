@@ -4,6 +4,8 @@ from PySide6.QtWidgets import (QApplication, QGridLayout, QHBoxLayout, QLabel,QS
     QVBoxLayout, QWidget)
 from API.homeindexCallAPI import *
 
+from qfluentwidgets import (RoundMenu,Action)
+from qfluentwidgets import FluentIcon as FIF
 
 class HomeUpdateWindow(QWidget,Ui_Form):
     def __init__(self,homeUI):
@@ -14,6 +16,23 @@ class HomeUpdateWindow(QWidget,Ui_Form):
         # 监听查询输入框内容
         self.watchSearchInputEdit()
 
+        # 生成ID按钮
+        self.pushButton.clicked.connect(self.pushButton_click)
+
+        # 添加下拉选项，标签
+        self.menu = RoundMenu(parent=self)
+        self.menu.view.itemClicked.connect(self.menu_clicked)
+        alltab_list = []
+        # 获取所有的标签,homeUI包在项目启动时已经完成初始化
+        for package in self.homeUI.packages:
+            if package['label'] in alltab_list:
+                continue
+            alltab_list.append(package['label'])
+        for label in alltab_list:
+            self.menu.addAction(Action(FIF.LABEL, label))
+        self.pushButton_2.setMenu(self.menu)
+
+
 
     def watchSearchInputEdit(self):
         # 监听查询输入框内容
@@ -22,10 +41,11 @@ class HomeUpdateWindow(QWidget,Ui_Form):
     def watchSearchInputTitle(self,text):
         # 监听查询输入框内容
         # 查询
-        packageList = Request_search_fileID_package(text, self.homeUI.packages)
-        if len(packageList):
+        this_package = {}
+        if text:
+            this_package = Request_search_fileID_package(text, self.homeUI.packages)
+        if this_package:
             # 对已经存在的fileID做全局数据加载
-            this_package = packageList[0]
             # 载入标签
             self.lineEdit_3.setText(this_package['label'])
             # 载入标题
@@ -50,3 +70,16 @@ class HomeUpdateWindow(QWidget,Ui_Form):
         else:
             # 对新建的数据不做校验
             pass
+
+    def pushButton_click(self):
+        create_fileID = create_uuid()
+        # 表单输入自动化设置
+        self.lineEdit.setText(create_fileID)
+        self.lineEdit_3.setText('')
+        self.lineEdit_2.setText('')
+
+
+    def menu_clicked(self,index):
+        self.lineEdit_3.setText(index.text())
+
+
