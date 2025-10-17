@@ -202,7 +202,11 @@
         </property>
         <layout class="QVBoxLayout" name="verticalLayout">
          <item>
-          <widget class="QGraphicsView" name="graphicsView"/>
+          <widget class="QGraphicsView" name="graphicsView">
+           <property name="alignment">
+            <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignTop</set>
+           </property>
+          </widget>
          </item>
         </layout>
        </widget>

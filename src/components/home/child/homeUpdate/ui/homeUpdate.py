@@ -140,6 +140,7 @@ class Ui_Form(object):
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.graphicsView = QGraphicsView(self.widget_2)
         self.graphicsView.setObjectName(u"graphicsView")
+        self.graphicsView.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignTop)
 
         self.verticalLayout.addWidget(self.graphicsView)
 
