@@ -86,23 +86,62 @@ def Request_search_package(search_string,return_json) -> list:
 
     return return_packageList
 
-def Request_update_package(fileID,content,return_json) -> str:
+def Request_update_package(fileID,content,return_json,name,label,homeUI) -> str:
+    is_newfile = True #文件是否存在
     # 修改文档功能
-    this_json = [packet for packet in return_json if packet['fileID'] == fileID][0]
-    this_read_content = read_file(this_json['filepath'])
+    try:
+        this_json = [packet for packet in return_json if packet['fileID'] == fileID][0]
+        this_read_content = read_file(this_json['filepath'])
+    except:
+        is_newfile = False
+        # 构造创建
+        md_file_dir = str(homeUI.DOCUMENTPATH) #项目所在根目录
+        nowtime_tuple = get_now_time() # 当前时间
+        time_dir_name = 'md_' + str(nowtime_tuple[0]) + '-' + str(nowtime_tuple[1]) # 时间所在目录
+        md_num = str(len(return_json)).zfill(5)  # 生成5位数
+        md_dir_file_name = md_num + "_" + label + "_" + name  #md文件夹名称
+        md_file_name = md_num + "_" + label + "_" + name + ".md"  # md文件名
+        #构造内容
+        filepath = md_file_dir + "\\" + time_dir_name + "\\" + md_dir_file_name + "\\" + md_file_name
+        filename = md_file_name
+        mddirpath = md_file_dir + "\\" + time_dir_name + "\\" + md_dir_file_name
+        mddirname = md_dir_file_name
+        timedirpath = md_file_dir + "\\" + time_dir_name
+        timedirname = time_dir_name
+
+        # 新文档构造目录
+        create_dir(timedirpath)
+        create_dir(mddirpath)
+
+        this_json = {
+                "fileID": fileID,
+                "isLANshared": False,
+                "name": name,
+                "label": label,
+                "filepath": filepath,
+                "filename": filename,
+                "mddirpath": mddirpath,
+                "mddirname": mddirname,
+                "timedirpath": timedirpath,
+                "timedirname": timedirname
+            }
+        this_read_content = ""
+
     # 文件内容校验
     if this_read_content == content:
         return this_read_content
 
+
     # 覆盖文件内容
     write_file(this_json['filepath'],content)
-
     # 备份修改
-    # 备份文件名规范: id + '_' + 文章标签 + '_' +文章标题  + "_20250930_175121" + '.md' id格式00001 共5位数，超出99999，00001a，00001b设置
-    backup_filename = timenow_filename(this_json['mddirname'],suffix='md')
-    backup_filepath = os.path.join(this_json['mddirpath'],backup_filename)
-    shutil_file(this_json['filepath'],backup_filepath)
-
+    if is_newfile:
+        # 备份文件名规范: id + '_' + 文章标签 + '_' +文章标题  + "_20250930_175121" + '.md' id格式00001 共5位数，超出99999，00001a，00001b设置
+        backup_filename = timenow_filename(this_json['mddirname'],suffix='md')
+        backup_filepath = os.path.join(this_json['mddirpath'],backup_filename)
+        shutil_file(this_json['filepath'],backup_filepath)
+    # 初始化文档根目录
+    Request_init_package(md_file_dir)
     return content
 
 def Request_delete_package(fileID,return_json) -> bool:

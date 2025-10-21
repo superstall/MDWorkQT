@@ -7,6 +7,11 @@ import time
 from datetime import datetime
 from markdown import markdown
 
+def get_now_time():
+    # 输出：年月日时分秒
+    nowtime = datetime.now()
+    return (nowtime.year,nowtime.month,nowtime.day,nowtime.hour, nowtime.minute, nowtime.second)
+
 def get_file_open_time(file_path):
     # 获取文件或文件夹创建的时间和最后一次修改时间
     # 获取最后修改时间（等同于“创建日期”在很多系统中）

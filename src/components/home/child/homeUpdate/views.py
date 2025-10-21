@@ -6,7 +6,7 @@ from API.homeindexCallAPI import *
 
 from qfluentwidgets import (RoundMenu,Action)
 from qfluentwidgets import FluentIcon as FIF
-
+from qfluentwidgets import (ListWidget,InfoBar,InfoBarPosition,ScrollBar)
 from PySide6.QtWidgets import (QApplication, QGridLayout, QHBoxLayout, QLabel,QScrollArea,QFileDialog,QGraphicsScene,
     QListWidgetItem, QPushButton, QSizePolicy, QSpacerItem,QGraphicsTextItem,
     QVBoxLayout, QWidget)
@@ -14,12 +14,18 @@ from PySide6.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
     QMetaObject, QObject, QPoint, QRect,
     QSize, QTime, QUrl, Qt)
 from PySide6.QtCore import Qt, QTimer,QSize
-
+from PySide6.QtCore import Qt, QRectF
 class HomeUpdateWindow(QWidget,Ui_Form):
     def __init__(self,homeUI):
         self.homeUI = homeUI
         super(HomeUpdateWindow, self).__init__()
         self.setupUi(self)
+
+        # 初始化组件内容
+        self.scene = QGraphicsScene()
+        self.graphicsView.setScene(self.scene)
+        # 创建 QGraphicsTextItem 并设置 HTML
+        self.text_item = QGraphicsTextItem()
 
         # 监听查询输入框内容
         self.watchSearchInputEdit()
@@ -40,6 +46,43 @@ class HomeUpdateWindow(QWidget,Ui_Form):
             self.menu.addAction(Action(FIF.LABEL, label))
         self.pushButton_2.setMenu(self.menu)
 
+        # 实时预览设置
+        self.preview_timer = QTimer()
+        self.preview_timer.setInterval(50)
+        self.preview_timer.timeout.connect(self.update_preview)
+        self.textEdit.textChanged.connect(self.on_text_changed)
+
+        # 保存按钮
+        self.pushButton_3.clicked.connect(self.pushButton3_click)
+
+    def pushButton3_click(self):
+        # 表单验证
+        if not self.lineEdit.text() or not self.lineEdit_2.text() or not self.lineEdit_3.text():
+            InfoBar.error(
+                title='保存失败！',
+                content="表单提交错误！请检查表单是否有未填写！",
+                orient=Qt.Orientation.Horizontal,
+                isClosable=True,
+                position=InfoBarPosition.TOP_RIGHT,
+                # position='Custom',   # NOTE: use custom info bar manager
+                duration=2000,
+                parent=self
+            )
+            return
+
+        # 保存md
+        isTrue = Request_update_package(self.lineEdit.text(),self.textEdit.toPlainText(), self.homeUI.packages,self.lineEdit_2.text(),self.lineEdit_3.text(),self.homeUI)
+        if isTrue:
+            InfoBar.success(
+                title='保存成功！',
+                content="成功保存到文件！",
+                orient=Qt.Orientation.Horizontal,
+                isClosable=True,
+                position=InfoBarPosition.TOP_RIGHT,
+                # position='Custom',   # NOTE: use custom info bar manager
+                duration=2000,
+                parent=self
+            )
 
 
     def watchSearchInputEdit(self):
@@ -80,21 +123,13 @@ class HomeUpdateWindow(QWidget,Ui_Form):
             self.textEdit.setText(file_content)
 
             html_content = markdown(file_content)
-            scene = QGraphicsScene()
-            self.graphicsView.setScene(scene)
-            # 创建 QGraphicsTextItem 并设置 HTML
-            text_item = QGraphicsTextItem()
-            text_item.setHtml(html_content)
-            text_item.setTextInteractionFlags(Qt.TextSelectableByMouse | Qt.TextSelectableByKeyboard)
-            scene.addItem(text_item)
+            self.text_item.setHtml(html_content)
+            self.text_item.setTextInteractionFlags(Qt.TextSelectableByMouse | Qt.TextSelectableByKeyboard)
+            self.scene.addItem(self.text_item)
 
             # self.graphicsView.resizeEvent = lambda _: self.resize_content()
 
-            # 实时预览设置
-            self.preview_timer = QTimer()
-            self.preview_timer.setInterval(50)
-            self.preview_timer.timeout.connect(self.update_preview)
-            self.textEdit.textChanged.connect(self.on_text_changed)
+
 
 
         else:
@@ -118,13 +153,12 @@ class HomeUpdateWindow(QWidget,Ui_Form):
 
         # 加载到预览视图
         html_content = markdown(html)
-        scene = QGraphicsScene()
-        self.graphicsView.setScene(scene)
-        # 创建 QGraphicsTextItem 并设置 HTML
-        text_item = QGraphicsTextItem()
-        text_item.setHtml(html_content)
-        text_item.setTextInteractionFlags(Qt.TextSelectableByMouse | Qt.TextSelectableByKeyboard)
-        scene.addItem(text_item)
+        self.text_item.setHtml(html_content)
+        self.text_item.setTextInteractionFlags(Qt.TextSelectableByMouse | Qt.TextSelectableByKeyboard)
+        self.scene.addItem(self.text_item)
+
+
+
         # self.graphicsView.resizeEvent = lambda _: self.resize_content()
 
     def on_text_changed(self):

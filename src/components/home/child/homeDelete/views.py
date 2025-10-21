@@ -40,6 +40,20 @@ class HomeDeleteWindow(QWidget,Ui_Form):
             self.label_2.setText('fileID不存在！')
 
     def pushButton_click(self):
+        # 表单验证
+        if not self.lineEdit.text():
+            InfoBar.error(
+                title='操作失败！',
+                content="表单提交错误！请检查表单是否有未填写！",
+                orient=Qt.Orientation.Horizontal,
+                isClosable=True,
+                position=InfoBarPosition.TOP_RIGHT,
+                # position='Custom',   # NOTE: use custom info bar manager
+                duration=2000,
+                parent=self
+            )
+            return
+
         # 获取输入的文本
         isTrue = Request_delete_package(self.lineEdit.text(), self.homeUI.packages)
         if isTrue:
