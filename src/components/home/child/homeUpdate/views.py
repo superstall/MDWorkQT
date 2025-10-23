@@ -83,6 +83,9 @@ class HomeUpdateWindow(QWidget,Ui_Form):
                 duration=2000,
                 parent=self
             )
+        # 给index页面提示更新信号
+        self.homeUI.isChange_tall_homeindex_package = True
+        self.isChange_tall_home = True
 
 
     def watchSearchInputEdit(self):

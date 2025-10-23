@@ -88,6 +88,7 @@ def Request_search_package(search_string,return_json) -> list:
 
 def Request_update_package(fileID,content,return_json,name,label,homeUI) -> str:
     is_newfile = True #文件是否存在
+    md_file_dir = str(homeUI.DOCUMENTPATH)  # 项目所在根目录
     # 修改文档功能
     try:
         this_json = [packet for packet in return_json if packet['fileID'] == fileID][0]
@@ -95,7 +96,6 @@ def Request_update_package(fileID,content,return_json,name,label,homeUI) -> str:
     except:
         is_newfile = False
         # 构造创建
-        md_file_dir = str(homeUI.DOCUMENTPATH) #项目所在根目录
         nowtime_tuple = get_now_time() # 当前时间
         time_dir_name = 'md_' + str(nowtime_tuple[0]) + '-' + str(nowtime_tuple[1]) # 时间所在目录
         md_num = str(len(return_json)).zfill(5)  # 生成5位数

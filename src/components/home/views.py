@@ -27,6 +27,7 @@ class HomeWindow(QWidget,Ui_Form):
         self.HomeUpdateWindow = HomeUpdateWindow(self)  # 更新页
         self.HomeDeleteWindow = HomeDeleteWindow(self) #删除页
         self.HomeDeleteWindow_this_fileID = ""
+        self.isChange_tall_home = False # 更新动作需要home页面提前配合
 
 
         # 动态声明子页面
@@ -75,12 +76,20 @@ class HomeWindow(QWidget,Ui_Form):
         self.tabWidget.tabBarClicked.connect(self.on_tab_clicked)
 
     def on_tab_clicked(self,index):
+        # 处理删除文件信号
         if self.homeindexWindow_this_fileID == self.HomeDeleteWindow_this_fileID:
             self.homeindexWindow.label_10.setText('')
             try:
                 read_file(self.homeindexWindow_this_package['filepath'])
             except Exception as e:
                 self.homeindexWindow.label_10.setText('警告：该文件已被删除')
+
+        # 处理更新文件信号
+        if self.isChange_tall_home:
+            self.isChange_tall_home = False
+            # 此时的更新动作触发了全局文档更新# 初始化文档根目录 #所有文件的ID都被梭哈了
+            self.homeindexWindow.init_listWidget() #更新menu动态列表
+
 
 
 

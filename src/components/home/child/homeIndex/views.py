@@ -16,16 +16,16 @@ from PySide6.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
     QMetaObject, QObject, QPoint, QRect,
     QSize, QTime, QUrl, Qt)
 
-
+import re
 class HomeIndexWindow(QWidget,Ui_Form):
     def __init__(self,homeUI):
         self.homeUI = homeUI
         super(HomeIndexWindow, self).__init__()
         self.setupUi(self)
         # 初始化获取全部文档包：每次重载列表都要更新这个变量
-        self.package_fileID = {}
+        self.packages_fileID = {}
         # 读取文档包存放的fileID列表
-        self.this_package_fileID = []
+        self.this_packages_fileID = []
         # 初始化显示项目目录
         self.label.setText("当前读取项目位置：" + str(self.homeUI.DOCUMENTPATH))
         # 设置鼠标选中
@@ -175,11 +175,11 @@ class HomeIndexWindow(QWidget,Ui_Form):
         # listwidget收集存储
         self.listWidget_menu_homeindexs = {}
         # 清空当前显示
-        self.package_fileID = {}
+        self.packages_fileID = {}
         for package_label in self.package_groups.keys():
             self.homeindex_menu_num +=1
             namelist = [package['name'] for package in self.package_groups[package_label]]
-            self.package_fileID[package_label] = [package['fileID'] for package in self.package_groups[package_label]]
+            self.packages_fileID[package_label] = [package['fileID'] for package in self.package_groups[package_label]]
             self.menu_labelANDnameShow_model(modelname='menu%salltext%s'%(str(package_label),str(self.homeindex_menu_num)),labelsetText=package_label,listWidgetList=namelist)
 
 
@@ -229,22 +229,28 @@ class HomeIndexWindow(QWidget,Ui_Form):
 
         # 触发删除，提前提取数据(场景：被删除内容重新选中标签页后依旧可以看，只有重新初始化页面或者menu组件才会消失)
         old_packages = []
-        if self.homeUI.isChange_tall_homeindex_package and len(self.this_package_fileID):
+        if self.homeUI.isChange_tall_homeindex_package and len(self.this_packages_fileID):
             self.homeUI.isChange_tall_homeindex_package = False
+            #触发删除后要检查的动作
             new_fileIDs = [packget['fileID'] for packget in self.homeUI.packages]
             for packget in self.homeUI.packages:
                 if packget['label'] in self.package_groups.keys():
                     r_package = [p for p in self.package_groups[packget['label']] if p['fileID'] not in new_fileIDs]
                     old_packages+=r_package
             self.homeUI.packages += old_packages
+            #出发新增或修改后要检查的动作
 
 
         # 提取选中数据下label下的数据
-        for labelname in self.package_fileID.keys():
-            if labelname in clicked_list.objectName():
-                self.this_package_fileID = self.package_fileID[labelname]
+        # 正则处理
+        print_label = clicked_list.objectName()
+        print_label = re.sub(r'\d+$', '', print_label)
+        print_label  = print_label[15:-7]
+        for labelname in self.packages_fileID.keys():
+            if labelname == print_label:
+                self.this_packages_fileID = self.packages_fileID[labelname]
 
-        this_fileID = self.this_package_fileID[currentRow]
+        this_fileID = self.this_packages_fileID[currentRow]
         this_package = Request_search_fileID_package(this_fileID,self.homeUI.packages)
         # 这俩个主要用来判定当前显示文件是否存在，不存在label_10发出警告，组件位于self.homeindexWindow.label_10
         self.homeUI.homeindexWindow_this_fileID = this_fileID
