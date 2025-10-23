@@ -146,8 +146,11 @@ def Request_update_package(fileID,content,return_json,name,label,homeUI) -> str:
 
 def Request_delete_package(fileID,return_json) -> bool:
     # 删除文档功能
-    this_json = [packet for packet in return_json if packet['fileID'] == fileID][0]
-    return remove_dir(this_json['mddirpath'])
+    try:
+        this_json = [packet for packet in return_json if packet['fileID'] == fileID][0]
+        return remove_dir(this_json['mddirpath'])
+    except:
+        return False
 
 
 

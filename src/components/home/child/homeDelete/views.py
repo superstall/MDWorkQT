@@ -67,8 +67,19 @@ class HomeDeleteWindow(QWidget,Ui_Form):
                 duration=2000,
                 parent=self
             )
-        # 更新
-        self.homeUI.packages = [p for p in self.homeUI.packages if p['fileID'] != self.lineEdit.text()]
-        self.homeUI.isChange_tall_homeindex_package = True
-        # 这俩个主要用来判定当前显示文件是否存在，不存在label_10发出警告，组件位于self.homeindexWindow.label_10
-        self.homeUI.HomeDeleteWindow_this_fileID = self.lineEdit.text()
+            # 更新
+            self.homeUI.packages = [p for p in self.homeUI.packages if p['fileID'] != self.lineEdit.text()]
+            self.homeUI.isChange_tall_homeindex_package = True
+            # 这俩个主要用来判定当前显示文件是否存在，不存在label_10发出警告，组件位于self.homeindexWindow.label_10
+            self.homeUI.HomeDeleteWindow_this_fileID = self.lineEdit.text()
+        else:
+            InfoBar.error(
+                title='操作失败！',
+                content="删除失败fileID:%s"%(self.lineEdit.text()),
+                orient=Qt.Orientation.Horizontal,
+                isClosable=True,
+                position=InfoBarPosition.TOP_RIGHT,
+                # position='Custom',   # NOTE: use custom info bar manager
+                duration=2000,
+                parent=self
+            )

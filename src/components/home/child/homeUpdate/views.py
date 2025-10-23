@@ -181,7 +181,7 @@ class HomeUpdateWindow(QWidget,Ui_Form):
 
     def menu_clicked(self,index):
         # 可选标签-填入表单
-        self.lineEdit_3.setText(index.text())
+        self.lineEdit_3.setText(index.text().strip())
 
     # 4. 动态调整缩放
     def resize_content(self):
