@@ -55,6 +55,44 @@ class HomeUpdateWindow(QWidget,Ui_Form):
         # 保存按钮
         self.pushButton_3.clicked.connect(self.pushButton3_click)
 
+        # 文档内容回溯按钮
+        self.Pointer = 0  # 指针位置
+        self.pushButton_4.setIcon(FIF.LEFT_ARROW)
+        self.pushButton_4.clicked.connect(self.pushButton4_click)
+        self.pushButton_5.setIcon(FIF.RIGHT_ARROW)
+        self.pushButton_5.clicked.connect(self.pushButton5_click)
+        # 设置鼠标选中
+        self.label_6.setTextInteractionFlags(Qt.TextSelectableByMouse)
+        self.label_6.setWordWrap(True)  # 启用自动换行
+
+    def pushButton5_click(self):
+        filepath = self.label_6.text()
+        # 根据文件位置获取所有备份文件-已经对文件名称进行时间排序
+        # 获取当前显示文件，选择要右查看的文件内容
+        if self.Pointer >= 0:
+            self.Pointer += 1
+        else:
+            self.Pointer = 0
+        fileContent = Request_search_ALLbackupFileContent(filepath,self.Pointer)
+        if fileContent[0]:
+            self.Pointer -= 1
+        self.textEdit.setText(fileContent[2])
+        print(fileContent[1])
+        self.label_6.setText(fileContent[1])
+
+    def pushButton4_click(self):
+        filepath = self.label_6.text()
+        # 根据文件位置获取所有备份文件-已经对文件名称进行时间排序
+        # 获取当前显示文件，选择要左查看的文件内容
+        if self.Pointer > 0:
+            self.Pointer -= 1
+        else:
+            self.Pointer = 0
+        fileContent = Request_search_ALLbackupFileContent(filepath, self.Pointer)
+        print(fileContent[1])
+        self.textEdit.setText(fileContent[2])
+        self.label_6.setText(fileContent[1])
+
     def pushButton3_click(self):
         # 表单验证
         if not self.lineEdit.text() or not self.lineEdit_2.text() or not self.lineEdit_3.text():
@@ -85,7 +123,7 @@ class HomeUpdateWindow(QWidget,Ui_Form):
             )
         # 给index页面提示更新信号
         self.homeUI.isChange_tall_homeindex_package = True
-        self.isChange_tall_home = True
+        self.homeUI.isChange_tall_home = True
 
 
     def watchSearchInputEdit(self):
@@ -104,6 +142,8 @@ class HomeUpdateWindow(QWidget,Ui_Form):
             self.lineEdit_3.setText(this_package['label'])
             # 载入标题
             self.lineEdit_2.setText(this_package['name'])
+            # 载入文件绝对路径显示
+            self.label_6.setText(this_package['filepath'])
             # 载入内容
             this_fileID = this_package['fileID']
             try:

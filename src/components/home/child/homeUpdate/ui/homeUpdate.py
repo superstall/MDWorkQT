@@ -16,10 +16,10 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QApplication, QGraphicsView, QGridLayout, QHBoxLayout,
-    QLabel, QLayout, QSizePolicy, QTextEdit,
-    QVBoxLayout, QWidget)
+    QLabel, QLayout, QSizePolicy, QSpacerItem,
+    QTextEdit, QVBoxLayout, QWidget)
 
-from qfluentwidgets import (DropDownPushButton, LineEdit, PushButton)
+from qfluentwidgets import (DropDownPushButton, LineEdit, PushButton, ToolButton)
 
 class Ui_Form(object):
     def setupUi(self, Form):
@@ -112,12 +112,55 @@ class Ui_Form(object):
 
         self.verticalLayout_3.addWidget(self.widget_4)
 
+        self.widget_8 = QWidget(self.widget_5)
+        self.widget_8.setObjectName(u"widget_8")
+        self.widget_8.setMinimumSize(QSize(0, 5))
+        self.horizontalLayout_4 = QHBoxLayout(self.widget_8)
+        self.horizontalLayout_4.setObjectName(u"horizontalLayout_4")
+        self.horizontalLayout_4.setContentsMargins(-1, 0, -1, 0)
+        self.pushButton_4 = ToolButton(self.widget_8)
+        self.pushButton_4.setObjectName(u"pushButton_4")
+
+        self.horizontalLayout_4.addWidget(self.pushButton_4)
+
+        self.pushButton_5 = ToolButton(self.widget_8)
+        self.pushButton_5.setObjectName(u"pushButton_5")
+
+        self.horizontalLayout_4.addWidget(self.pushButton_5)
+
+        self.horizontalSpacer = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.horizontalLayout_4.addItem(self.horizontalSpacer)
+
+
+        self.verticalLayout_3.addWidget(self.widget_8)
+
         self.widget_7 = QWidget(self.widget_5)
         self.widget_7.setObjectName(u"widget_7")
         self.widget_7.setMinimumSize(QSize(0, 450))
         self.widget_7.setStyleSheet(u"background-color: rgb(243, 243, 243);")
         self.verticalLayout_4 = QVBoxLayout(self.widget_7)
         self.verticalLayout_4.setObjectName(u"verticalLayout_4")
+        self.widget_9 = QWidget(self.widget_7)
+        self.widget_9.setObjectName(u"widget_9")
+        self.horizontalLayout_5 = QHBoxLayout(self.widget_9)
+        self.horizontalLayout_5.setObjectName(u"horizontalLayout_5")
+        self.label_4 = QLabel(self.widget_9)
+        self.label_4.setObjectName(u"label_4")
+        self.label_4.setMaximumSize(QSize(80, 16777215))
+        self.label_4.setCursor(QCursor(Qt.CursorShape.IBeamCursor))
+        self.label_4.setAlignment(Qt.AlignmentFlag.AlignBottom|Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft)
+
+        self.horizontalLayout_5.addWidget(self.label_4)
+
+        self.label_6 = QLabel(self.widget_9)
+        self.label_6.setObjectName(u"label_6")
+
+        self.horizontalLayout_5.addWidget(self.label_6)
+
+
+        self.verticalLayout_4.addWidget(self.widget_9)
+
         self.textEdit = QTextEdit(self.widget_7)
         self.textEdit.setObjectName(u"textEdit")
 
@@ -164,5 +207,9 @@ class Ui_Form(object):
         self.pushButton_2.setText(QCoreApplication.translate("Form", u"\u53ef\u9009\u6807\u7b7e", None))
         self.pushButton.setText(QCoreApplication.translate("Form", u"\u751f\u6210ID", None))
         self.label_2.setText(QCoreApplication.translate("Form", u"\u6807\u7b7e:", None))
+        self.pushButton_4.setText("")
+        self.pushButton_5.setText("")
+        self.label_4.setText(QCoreApplication.translate("Form", u"\u5f53\u524d\u5c55\u793a\u6587\u4ef6\uff1a", None))
+        self.label_6.setText("")
     # retranslateUi
 

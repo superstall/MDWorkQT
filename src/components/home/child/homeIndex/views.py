@@ -245,9 +245,9 @@ class HomeIndexWindow(QWidget,Ui_Form):
         # 正则处理
         print_label = clicked_list.objectName()
         print_label = re.sub(r'\d+$', '', print_label)
-        print_label  = print_label[15:-7]
+        print_label  = print_label[10:-7]
         for labelname in self.packages_fileID.keys():
-            if labelname == print_label:
+            if labelname in print_label:
                 self.this_packages_fileID = self.packages_fileID[labelname]
 
         this_fileID = self.this_packages_fileID[currentRow]

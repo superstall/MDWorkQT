@@ -82,6 +82,7 @@ class HomeWindow(QWidget,Ui_Form):
             try:
                 read_file(self.homeindexWindow_this_package['filepath'])
             except Exception as e:
+                self.homeindexWindow.label_10.setStyleSheet("QLabel { color : red; }")
                 self.homeindexWindow.label_10.setText('警告：该文件已被删除')
 
         # 处理更新文件信号
@@ -89,6 +90,8 @@ class HomeWindow(QWidget,Ui_Form):
             self.isChange_tall_home = False
             # 此时的更新动作触发了全局文档更新# 初始化文档根目录 #所有文件的ID都被梭哈了
             self.homeindexWindow.init_listWidget() #更新menu动态列表
+            self.homeindexWindow.label_10.setStyleSheet("QLabel { color : green; }")
+            self.homeindexWindow.label_10.setText('警告：该文件已更新')
 
 
 

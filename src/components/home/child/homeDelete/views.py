@@ -75,7 +75,7 @@ class HomeDeleteWindow(QWidget,Ui_Form):
         else:
             InfoBar.error(
                 title='操作失败！',
-                content="删除失败fileID:%s"%(self.lineEdit.text()),
+                content="未查询到该fileID:%s"%(self.lineEdit.text()),
                 orient=Qt.Orientation.Horizontal,
                 isClosable=True,
                 position=InfoBarPosition.TOP_RIGHT,

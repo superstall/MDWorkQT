@@ -3,6 +3,26 @@ from API.init_fuzzywuzzy import get_list_fuzzywuzzy
 import uuid
 from globalUtile import get_RootDirName
 import os
+
+def Request_search_ALLbackupFileContent(filepath,Pointer):
+    # 获取文档目录下的所有备份文件文件名，并进行文件名时间排序
+    if not exists_filepath(filepath):
+        return []
+    this_file = filepath.rsplit('\\',1)
+    ALLfilename = get_filepath_ALLfilename(this_file[0])
+    print(ALLfilename)
+    if not ALLfilename:
+        return []
+    # 好像不用对文件进行排序，就不排了
+    isTrue = False # 用来给外部信号，Pointer是否不能再大了
+    if Pointer  >= len(ALLfilename):
+        this_filename = ALLfilename[-1]
+        isTrue = True
+    else:
+        this_filename = ALLfilename[Pointer]
+    this_filepath = this_file[0] + '\\' + this_filename
+    return  (isTrue,this_filepath,read_file(this_filepath))
+
 def Request_init_package(DOCUMENTPATH=None) -> list:
     # 初始化项目包
     if DOCUMENTPATH == None:
