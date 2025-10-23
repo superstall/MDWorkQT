@@ -140,8 +140,10 @@ class HomeUpdateWindow(QWidget,Ui_Form):
             # 对已经存在的fileID做全局数据加载
             # 载入标签
             self.lineEdit_3.setText(this_package['label'])
+            self.lineEdit_3.setEnabled(False)
             # 载入标题
             self.lineEdit_2.setText(this_package['name'])
+            self.lineEdit_2.setEnabled(False)
             # 载入文件绝对路径显示
             self.label_6.setText(this_package['filepath'])
             # 载入内容
@@ -177,7 +179,8 @@ class HomeUpdateWindow(QWidget,Ui_Form):
 
         else:
             # 对新建的数据不做校验
-            pass
+            self.lineEdit_3.setEnabled(True)
+            self.lineEdit_2.setEnabled(True)
 
     def update_preview(self):
         """更新预览内容"""
